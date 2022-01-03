@@ -55,8 +55,8 @@ spec:
             - name: ConnectionStrings__Tgs
               valueFrom:
                 secretKeyRef:
-                  - name: tgs-connections
-                    key: tgs
+                  name: tgs-connections
+                  key: tgs
           ports:
             - name: http
               containerPort: 80
