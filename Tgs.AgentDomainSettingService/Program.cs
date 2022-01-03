@@ -56,5 +56,6 @@ app.MapControllers();
 app.MapSwagger();
 
 app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.yaml", "v1"));
+app.UseReDoc();
 
 app.Run();
