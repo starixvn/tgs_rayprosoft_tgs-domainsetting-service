@@ -31,7 +31,17 @@ builder.Services
         options.BrandCertificateBaseUrl = config.GetValue<Uri>("AgentDomain:BrandCertificateBaseUrl");
     })
     .AddAgentDomainSetting(
-        sp => KubernetesClientConfiguration.BuildConfigFromConfigFile())
+        sp =>
+        {
+            var config = sp.GetRequiredService<IConfiguration>();
+
+            var isInCluster = config.GetValue<bool>("AgentDomain:KubernetesInCluster");
+
+            if (isInCluster)
+                return KubernetesClientConfiguration.InClusterConfig();
+            else
+                return KubernetesClientConfiguration.BuildConfigFromConfigFile();
+        })
     .AddAgentDomainSettingRepositories((sp, optionsBuilder) =>
     {
         var config = sp.GetRequiredService<IConfiguration>();
