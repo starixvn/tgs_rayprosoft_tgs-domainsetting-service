@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-{{ include "agent-domain.fullname" . }}
+  namespace: {{ .Values.namespace }}
+data:
+  appsettings.json: |
+    {
+      "AgentDomain": {
+        "BrandCertificateBaseUrl": "http://brand-cert-api"
+      }
+    }

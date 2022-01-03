@@ -4,7 +4,11 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddJsonFile("/config/appsettings.json", true);
+
 builder.Services.AddControllers();
+
+builder.Services.AddHealthChecks();
 
 builder.Services
     .AddEndpointsApiExplorer()
@@ -37,6 +41,7 @@ builder.Services
 
 var app = builder.Build();
 
+app.MapHealthChecks("/healthz");
 app.MapControllers();
 app.MapSwagger();
 
