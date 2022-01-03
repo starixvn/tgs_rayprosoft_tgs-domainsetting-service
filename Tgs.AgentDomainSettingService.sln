@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.AgentDomainSettingService", "Tgs.AgentDomainSettingService\Tgs.AgentDomainSettingService.csproj", "{01B5D728-484F-489E-BCD1-8295DD63A56C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{94B7FCF1-6B59-4FE2-929C-286BD26D85C9}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		nuget.config = nuget.config
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgentDomainSetting.Core", "AgentDomainSetting.Core\AgentDomainSetting.Core.csproj", "{A084F74A-0D60-4D7F-8574-A6C1B8310106}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AgentDomainSetting.Core.UnitTests", "AgentDomainSetting.Core.UnitTests\AgentDomainSetting.Core.UnitTests.csproj", "{CD851E50-6400-4A80-BB98-95A058AFEC7E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgentDomainSetting.Repositories", "AgentDomainSetting.Repositories\AgentDomainSetting.Repositories.csproj", "{83D5545E-7838-442F-8565-2125F2B5BC84}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{01B5D728-484F-489E-BCD1-8295DD63A56C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01B5D728-484F-489E-BCD1-8295DD63A56C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01B5D728-484F-489E-BCD1-8295DD63A56C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01B5D728-484F-489E-BCD1-8295DD63A56C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A084F74A-0D60-4D7F-8574-A6C1B8310106}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A084F74A-0D60-4D7F-8574-A6C1B8310106}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A084F74A-0D60-4D7F-8574-A6C1B8310106}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A084F74A-0D60-4D7F-8574-A6C1B8310106}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD851E50-6400-4A80-BB98-95A058AFEC7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD851E50-6400-4A80-BB98-95A058AFEC7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD851E50-6400-4A80-BB98-95A058AFEC7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD851E50-6400-4A80-BB98-95A058AFEC7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83D5545E-7838-442F-8565-2125F2B5BC84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83D5545E-7838-442F-8565-2125F2B5BC84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83D5545E-7838-442F-8565-2125F2B5BC84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83D5545E-7838-442F-8565-2125F2B5BC84}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5184AC9C-A0BA-458B-B28B-0F8379511A38}
+	EndGlobalSection
+EndGlobal
