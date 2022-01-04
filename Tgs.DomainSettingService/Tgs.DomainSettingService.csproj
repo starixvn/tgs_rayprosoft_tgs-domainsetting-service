@@ -24,8 +24,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\AgentDomainSetting.Core\AgentDomainSetting.Core.csproj" />
-		<ProjectReference Include="..\AgentDomainSetting.Repositories\AgentDomainSetting.Repositories.csproj" />
+	  <ProjectReference Include="..\DomainSetting.Core\DomainSetting.Core.csproj" />
+	  <ProjectReference Include="..\DomainSetting.Repositories\DomainSetting.Repositories.csproj" />
 	</ItemGroup>
 
 </Project>
