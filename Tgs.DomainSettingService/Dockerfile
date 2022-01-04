@@ -9,19 +9,19 @@ ARG BuildConfiguration=Release
 RUN --mount=type=secret,id=nuget,dst=/pat cp /pat ~/.nuget/NuGet/NuGet.Config
 WORKDIR /src
 COPY ["nuget.config", "."]
-COPY ["Tgs.AgentDomainSettingService/Tgs.AgentDomainSettingService.csproj", "Tgs.AgentDomainSettingService/"]
-COPY ["AgentDomainSetting.Repositories/AgentDomainSetting.Repositories.csproj", "AgentDomainSetting.Repositories/"]
-COPY ["AgentDomainSetting.Core/AgentDomainSetting.Core.csproj", "AgentDomainSetting.Core/"]
-RUN dotnet restore "Tgs.AgentDomainSettingService/Tgs.AgentDomainSettingService.csproj"
+COPY ["Tgs.DomainSettingService/Tgs.DomainSettingService.csproj", "Tgs.DomainSettingService/"]
+COPY ["DomainSetting.Core/DomainSetting.Core.csproj", "DomainSetting.Core/"]
+COPY ["DomainSetting.Repositories/DomainSetting.Repositories.csproj", "DomainSetting.Repositories/"]
+RUN dotnet restore "Tgs.DomainSettingService/Tgs.DomainSettingService.csproj"
 COPY . .
-WORKDIR "/src/Tgs.AgentDomainSettingService"
-RUN dotnet build "Tgs.AgentDomainSettingService.csproj" -c $BuildConfiguration -o /app/build
+WORKDIR "/src/Tgs.DomainSettingService"
+RUN dotnet build "Tgs.DomainSettingService.csproj" -c $BuildConfiguration -o /app/build
 
 FROM build AS publish
 ARG BuildConfiguration
-RUN dotnet publish "Tgs.AgentDomainSettingService.csproj" -c $BuildConfiguration -o /app/publish
+RUN dotnet publish "Tgs.DomainSettingService.csproj" -c $BuildConfiguration -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Tgs.AgentDomainSettingService.dll"]
+ENTRYPOINT ["dotnet", "Tgs.DomainSettingService.dll"]

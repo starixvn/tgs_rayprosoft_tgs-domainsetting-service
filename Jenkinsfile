@@ -60,7 +60,7 @@ pipeline {
 
 		stage('Build Docker Image') {
 			steps {
-				sh 'dotnet build "Tgs.AgentDomainSettingService/Tgs.AgentDomainSettingService.csproj" -c $BuildConfiguration -t:ContainerBuild -p:DockerfileTag="$ImageName:${TAG}" --no-restore '
+				sh 'dotnet build "Tgs.DomainSettingService/Tgs.DomainSettingService.csproj" -c $BuildConfiguration -t:ContainerBuild -p:DockerfileTag="$ImageName:${TAG}" --no-restore '
 			}
 		}
 
@@ -91,12 +91,12 @@ pipeline {
                 withKubeConfig([credentialsId: env.k8s_config]) {
                     withCredentials([string(credentialsId: "tgs-${kube_ns}-connectionstring", variable: "conn")]) {
                         sh '''
-                            helm template deployment/k8s/agent-domain \
+                            helm template deployment/k8s/domain-setting \
                                 --set image.tag=${TAG} \
                                 --set namespace=${kube_ns}
                         '''
                         sh '''
-                            helm template deployment/k8s/agent-domain \
+                            helm template deployment/k8s/domain-setting \
                                 --set image.tag=${TAG} \
                                 --set namespace=${kube_ns} \
                                 | kubectl -n ${kube_ns} apply -f -

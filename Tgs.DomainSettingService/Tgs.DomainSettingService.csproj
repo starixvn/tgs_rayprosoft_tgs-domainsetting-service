@@ -9,7 +9,7 @@
 		<GlobalNugetConfig>$(UserProfile)\AppData\Roaming\NuGet\NuGet.Config</GlobalNugetConfig>
 		<GlobalNugetConfig Condition="'$(UserProfile)'==''">$(HOME)/.nuget/NuGet/NuGet.Config</GlobalNugetConfig>
 		<DockerfileBuildArguments>--build-arg "BuildConfiguration=$(Configuration)" --secret id=nuget,src="$(GlobalNugetConfig)"</DockerfileBuildArguments>
-		<DockerfileTag Condition="$(DockerfileTag) == ''">agent-domain</DockerfileTag>
+		<DockerfileTag Condition="$(DockerfileTag) == ''">domain-setting</DockerfileTag>
 	</PropertyGroup>
 
 	<ItemGroup>

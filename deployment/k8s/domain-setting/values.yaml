@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: harbor.rpgp.cc/tgs/agent-domain
+  repository: harbor.rpgp.cc/tgs/domain-setting
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
@@ -14,8 +14,8 @@ namespace: dev
 
 imagePullSecrets:
   - name: secret-tgs-harbor
-nameOverride: "agent-domain"
-fullnameOverride: "agent-domain"
+nameOverride: "domain-setting"
+fullnameOverride: "domain-setting"
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -24,7 +24,7 @@ serviceAccount:
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: "agent-domain"
+  name: "domain-setting"
 
 podAnnotations: {}
 

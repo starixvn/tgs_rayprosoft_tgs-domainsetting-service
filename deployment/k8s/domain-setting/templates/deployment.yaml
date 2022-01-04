@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "agent-domain.fullname" . }}
+  name: {{ include "domain-setting.fullname" . }}
   labels:
-    {{- include "agent-domain.labels" . | nindent 4 }}
+    {{- include "domain-setting.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "agent-domain.selectorLabels" . | nindent 6 }}
+      {{- include "domain-setting.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,13 +18,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "agent-domain.selectorLabels" . | nindent 8 }}
+        {{- include "domain-setting.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "agent-domain.serviceAccountName" . }}
+      serviceAccountName: {{ include "domain-setting.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       {{- if eq .Values.namespace "staging" }}
@@ -79,7 +79,7 @@ spec:
       volumes:
         - name: appsettings
           configMap:
-            name: configmap-{{ include "agent-domain.fullname" . }}
+            name: configmap-{{ include "domain-setting.fullname" . }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
