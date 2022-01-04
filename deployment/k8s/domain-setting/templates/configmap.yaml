@@ -8,5 +8,8 @@ data:
     {
       "AgentDomain": {
         "BrandCertificateBaseUrl": "http://brand-cert-api"
+      },
+      "Cloudflare": {
+        "TgsDomain": "220.132.206.70"
       }
     }

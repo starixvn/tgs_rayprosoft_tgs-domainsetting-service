@@ -57,6 +57,16 @@ spec:
                 secretKeyRef:
                   name: tgs-connections
                   key: tgs
+            - name: Cloudflare__Token
+              valueFrom:
+                secretKeyRef:
+                  name: tgs-cloudflare
+                  key: token
+            - name: Cloudflare__AccountId
+              valueFrom:
+                secretKeyRef:
+                  name: tgs-cloudflare
+                  key: accountId
           ports:
             - name: http
               containerPort: 80
