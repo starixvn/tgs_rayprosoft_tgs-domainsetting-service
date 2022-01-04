@@ -1,12 +1,15 @@
 using k8s;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Tgs.AgentDomainSettingService;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddJsonFile("/config/appsettings.json", true);
 
-builder.Services.AddControllers();
+builder.Services
+    .AddRouting(options => options.LowercaseUrls = true)
+    .AddControllers();
 
 builder.Services.AddHealthChecks();
 
@@ -24,13 +27,15 @@ builder.Services
     });
 
 builder.Services
+    .AddTransient<HttpClientLoggingHandler>()
     .AddBrandCertificateClient((options, sp) =>
     {
         var config = sp.GetRequiredService<IConfiguration>();
 
         options.BrandCertificateBaseUrl = config.GetValue<Uri>("AgentDomain:BrandCertificateBaseUrl");
     })
-    .AddAgentDomainSetting(
+    .AddAgentDomainSetting()
+    .ConfigureKubernetesClientConfiguration(
         sp =>
         {
             var config = sp.GetRequiredService<IConfiguration>();
@@ -41,7 +46,16 @@ builder.Services
                 return KubernetesClientConfiguration.InClusterConfig();
             else
                 return KubernetesClientConfiguration.BuildConfigFromConfigFile();
-        })
+        },
+        sp => new[] { sp.GetRequiredService<HttpClientLoggingHandler>() })
+    .ConfigureCloudflareOptions((options, sp) =>
+    {
+        var config = sp.GetRequiredService<IConfiguration>();
+
+        config.GetSection("Cloudflare").Bind(options);
+    })
+    .ConfigureCloudflareClient(builder => builder.AddHttpMessageHandler<HttpClientLoggingHandler>())
+    .Services
     .AddAgentDomainSettingRepositories((sp, optionsBuilder) =>
     {
         var config = sp.GetRequiredService<IConfiguration>();
