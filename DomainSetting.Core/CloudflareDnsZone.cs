@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Tgs.AgentDomainSettings;
+namespace Tgs.DomainSettings;
 
 public class CloudflareDnsZone
 {

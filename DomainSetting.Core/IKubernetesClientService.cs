@@ -1,6 +1,6 @@
 ﻿using k8s.Models;
 
-namespace Tgs.AgentDomainSettings;
+namespace Tgs.DomainSettings;
 
 public interface IKubernetesClientService
 {

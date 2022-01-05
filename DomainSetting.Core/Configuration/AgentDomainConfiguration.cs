@@ -3,7 +3,7 @@ using k8s;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace Tgs.AgentDomainSettings.Configuration;
+namespace Tgs.DomainSettings.Configuration;
 
 public class AgentDomainConfiguration
 {

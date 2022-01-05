@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
-using Tgs.AgentDomainSettings;
-using Tgs.AgentDomainSettings.Configuration;
+using Tgs.DomainSettings;
+using Tgs.DomainSettings.Configuration;
 
 namespace Microsoft.Extensions.DependencyInjection;
 

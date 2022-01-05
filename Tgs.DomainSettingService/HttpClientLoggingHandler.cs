@@ -30,6 +30,5 @@ public class HttpClientLoggingHandler : DelegatingHandler
         }
 
         return response;
-
     }
 }

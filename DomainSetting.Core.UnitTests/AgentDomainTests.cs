@@ -1,9 +1,9 @@
 ﻿using k8s.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
-using Tgs.AgentDomainSettings;
-using Tgs.AgentDomainSettings.ApplicationServices;
 using Tgs.BrandCertificate.Clients;
+using Tgs.DomainSettings;
+using Tgs.DomainSettings.ApplicationServices;
 
 namespace AgentDomainSetting.Core.UnitTests;
 

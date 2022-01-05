@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Tgs.AgentDomainSettings.ApplicationServices;
+using Tgs.DomainSettings.ApplicationServices;
 using Tgs.ServiceUtility;
 
 namespace Tgs.AgentDomainSettingService.Controllers;

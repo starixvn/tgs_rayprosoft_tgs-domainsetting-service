@@ -17,6 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DomainSetting.Repositories"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.DomainSettingService", "Tgs.DomainSettingService\Tgs.DomainSettingService.csproj", "{629E3AC8-69D8-45EF-8333-A1052F524ECF}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tgs.DomainSetting.Client", "Tgs.DomainSetting.Client\Tgs.DomainSetting.Client.csproj", "{84C00AC4-911D-4086-983F-9302E2D1451B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tgs.DomainSettingService.IntegrationTests", "Tgs.DomainSettingService.IntegrationTests\Tgs.DomainSettingService.IntegrationTests.csproj", "{96345087-EC61-47B0-8DF5-0BEA2F305576}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{629E3AC8-69D8-45EF-8333-A1052F524ECF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{629E3AC8-69D8-45EF-8333-A1052F524ECF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{629E3AC8-69D8-45EF-8333-A1052F524ECF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84C00AC4-911D-4086-983F-9302E2D1451B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84C00AC4-911D-4086-983F-9302E2D1451B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84C00AC4-911D-4086-983F-9302E2D1451B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84C00AC4-911D-4086-983F-9302E2D1451B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96345087-EC61-47B0-8DF5-0BEA2F305576}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96345087-EC61-47B0-8DF5-0BEA2F305576}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96345087-EC61-47B0-8DF5-0BEA2F305576}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96345087-EC61-47B0-8DF5-0BEA2F305576}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

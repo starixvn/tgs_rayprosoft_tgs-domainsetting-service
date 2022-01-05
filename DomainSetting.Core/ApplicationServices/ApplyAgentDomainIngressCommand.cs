@@ -1,3 +1,3 @@
-﻿namespace Tgs.AgentDomainSettings.ApplicationServices;
+﻿namespace Tgs.DomainSettings.ApplicationServices;
 
 public record ApplyAgentDomainIngressCommand(Guid AgentId);

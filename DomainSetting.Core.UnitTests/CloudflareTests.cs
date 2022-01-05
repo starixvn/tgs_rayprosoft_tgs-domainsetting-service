@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
-using Tgs.AgentDomainSettings;
-using Tgs.AgentDomainSettings.ApplicationServices;
+using Tgs.DomainSettings;
+using Tgs.DomainSettings.ApplicationServices;
 
 namespace AgentDomainSetting.Core.UnitTests;
 
@@ -40,7 +40,6 @@ public class CloudflareTests
 
         _ = fakeCloudflareClient.Received(2)
             .CreateCNameInZoneAsync(Arg.Is("testId"), Arg.Any<string>(), Arg.Any<string>());
-
     }
 
     [TestMethod]

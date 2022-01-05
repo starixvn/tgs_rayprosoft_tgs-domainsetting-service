@@ -1,6 +1,6 @@
 ﻿using Tgs.ServiceUtility;
 
-namespace Tgs.AgentDomainSettings.ApplicationServices;
+namespace Tgs.DomainSettings.ApplicationServices;
 
 internal class CreateDnsZoneInfoCommandService : ICommandService<CreateDnsZoneInfoCommand>
 {

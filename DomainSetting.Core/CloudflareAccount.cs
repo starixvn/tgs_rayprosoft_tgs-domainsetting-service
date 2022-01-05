@@ -1,4 +1,4 @@
-﻿namespace Tgs.AgentDomainSettings;
+﻿namespace Tgs.DomainSettings;
 
 internal class CloudflareAccount
 {

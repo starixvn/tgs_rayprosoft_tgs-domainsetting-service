@@ -1,4 +1,5 @@
 ﻿using Tgs.AgentDomainSettings.Repositories.Entities;
+using Tgs.DomainSettings;
 
 namespace Tgs.AgentDomainSettings.Repositories;
 

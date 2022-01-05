@@ -1,7 +1,7 @@
 using k8s;
 using k8s.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Tgs.AgentDomainSettings.Properties;
+using Tgs.DomainSettings.Properties;
 
 namespace AgentDomainSetting.Core.UnitTests;
 

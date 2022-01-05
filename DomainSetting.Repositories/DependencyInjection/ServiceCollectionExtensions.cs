@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Tgs.AgentDomainSettings;
 using Tgs.AgentDomainSettings.Repositories;
 using Tgs.AgentDomainSettings.Repositories.Entities;
+using Tgs.DomainSettings;
 
 namespace Microsoft.Extensions.DependencyInjection;
 

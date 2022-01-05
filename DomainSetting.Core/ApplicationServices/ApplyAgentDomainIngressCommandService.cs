@@ -1,11 +1,11 @@
 ﻿using System.Text;
 using k8s;
 using k8s.Models;
-using Tgs.AgentDomainSettings.Properties;
 using Tgs.BrandCertificate.Clients;
+using Tgs.DomainSettings.Properties;
 using Tgs.ServiceUtility;
 
-namespace Tgs.AgentDomainSettings.ApplicationServices;
+namespace Tgs.DomainSettings.ApplicationServices;
 
 internal class ApplyAgentDomainIngressCommandService : ICommandService<ApplyAgentDomainIngressCommand>
 {
@@ -62,7 +62,6 @@ internal class ApplyAgentDomainIngressCommandService : ICommandService<ApplyAgen
 
         ingress.Spec.Tls = new List<V1IngressTLS> { ingressTls };
         ingress.Spec.Rules = new List<V1IngressRule>();
-
 
         foreach (var domainName in agentDomains)
         {
