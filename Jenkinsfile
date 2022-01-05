@@ -58,6 +58,13 @@ pipeline {
 			}
 		}
 
+        stage('Push packages') {
+			steps {
+				sh 'dotnet pack -c $BuildConfiguration "Tgs.DomainSetting.Client/Tgs.DomainSetting.Client.csproj" --no-build'
+				sh 'dotnet nuget push "Tgs.DomainSetting.Client/bin/$BuildConfiguration/*.nupkg" -s "raypro-baget" -k admin --skip-duplicate'
+			}
+		}
+
 		stage('Build Docker Image') {
 			steps {
 				sh 'dotnet build "Tgs.DomainSettingService/Tgs.DomainSettingService.csproj" -c $BuildConfiguration -t:ContainerBuild -p:DockerfileTag="$ImageName:${TAG}" --no-restore '
