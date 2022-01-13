@@ -6,7 +6,7 @@
 		<Nullable>enable</Nullable>
 		<RootNamespace>Tgs.DomainSettings.Clients</RootNamespace>
 		<PackageId>Tgs.DomainSetting.Client</PackageId>
-		<Version>0.0.2</Version>
+		<Version>0.0.3</Version>
 		<Authors>Raypro</Authors>
 		<PackageProjectUrl>https://gitlab.com/rayprosoft/tgs-domainsetting-service</PackageProjectUrl>
 		<RepositoryUrl>https://gitlab.com/rayprosoft/tgs-domainsetting-service.git</RepositoryUrl>
