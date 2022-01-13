@@ -22,10 +22,10 @@ public class CloudflareTests
 
         var command = new CreateDnsZoneInfoCommand(Guid.NewGuid());
 
-        fakeTgsRepository.QueryAgentDomainsAsync(Arg.Is(command.AgentId))
+        _ = fakeTgsRepository.QueryAgentDomainsAsync(Arg.Is(command.AgentId))
             .Returns(new[] { "test.com" }.ToAsyncEnumerable());
 
-        fakeCloudflareClient.CreateZoneAsync(Arg.Is("test.com"))
+        _ = fakeCloudflareClient.CreateZoneAsync(Arg.Is("test.com"))
             .Returns(new CloudflareDnsZone
             {
                 Id = "testId",
@@ -54,10 +54,10 @@ public class CloudflareTests
 
         var command = new DeleteDnsZoneInfoCommand(Guid.NewGuid());
 
-        fakeTgsRepository.QueryAgentDomainsAsync(Arg.Is(command.AgentId))
+        _ = fakeTgsRepository.QueryAgentDomainsAsync(Arg.Is(command.AgentId))
             .Returns(new[] { "test.com" }.ToAsyncEnumerable());
 
-        fakeCloudflareClient.ListZonesAsync(Arg.Is("test.com"))
+        _ = fakeCloudflareClient.ListZonesAsync(Arg.Is("test.com"))
             .Returns(new[] {
                 new CloudflareDnsZone {
                     Id = "testId",

@@ -29,7 +29,7 @@ internal class ApplyAgentDomainIngressCommandService : ICommandService<ApplyAgen
     {
         var agentDomains = await _tgsRepository
             .QueryAgentDomainsAsync(command.AgentId)
-            .ToArrayAsync()
+            .ToArrayAsync(cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
         if (!agentDomains.Any())
@@ -77,15 +77,14 @@ internal class ApplyAgentDomainIngressCommandService : ICommandService<ApplyAgen
 
     private string BuildNginxConfigurationSnippet(string brandToken, string invitationCode)
     {
-        var sb = new StringBuilder();
-
-        sb.AppendLine($"proxy_set_header Brand-Token {brandToken};");
-        sb.AppendLine($"proxy_set_header Agent-Invitation-Code {invitationCode};");
+        var sb = new StringBuilder()
+            .AppendLine($"proxy_set_header Brand-Token {brandToken};")
+            .AppendLine($"proxy_set_header Agent-Invitation-Code {invitationCode};");
 
         return sb.ToString();
     }
 
-    private V1IngressRule CreateIngressRule(string domainName)
+    private static V1IngressRule CreateIngressRule(string domainName)
     {
         var ingressRule = new V1IngressRule(domainName, new V1HTTPIngressRuleValue(new List<V1HTTPIngressPath>()));
 

@@ -15,16 +15,13 @@ builder.Services.AddHealthChecks();
 
 builder.Services
     .AddEndpointsApiExplorer()
-    .AddSwaggerGen(options =>
-    {
-        options.SwaggerDoc(
-            "v1",
-            new OpenApiInfo
-            {
-                Title = "AgentDomainSetting Api",
-                Version = "v1"
-            });
-    });
+    .AddSwaggerGen(options => options.SwaggerDoc(
+        "v1",
+        new OpenApiInfo
+        {
+            Title = "AgentDomainSetting Api",
+            Version = "v1"
+        }));
 
 builder.Services
     .AddTransient<HttpClientLoggingHandler>()
@@ -42,10 +39,9 @@ builder.Services
 
             var isInCluster = config.GetValue<bool>("AgentDomain:KubernetesInCluster");
 
-            if (isInCluster)
-                return KubernetesClientConfiguration.InClusterConfig();
-            else
-                return KubernetesClientConfiguration.BuildConfigFromConfigFile();
+            return isInCluster 
+                ? KubernetesClientConfiguration.InClusterConfig() 
+                : KubernetesClientConfiguration.BuildConfigFromConfigFile();
         },
         sp => new[] { sp.GetRequiredService<HttpClientLoggingHandler>() })
     .ConfigureCloudflareOptions((options, sp) =>
@@ -60,7 +56,7 @@ builder.Services
     {
         var config = sp.GetRequiredService<IConfiguration>();
 
-        optionsBuilder.UseNpgsql(config.GetConnectionString("Tgs"));
+        _ = optionsBuilder.UseNpgsql(config.GetConnectionString("Tgs"));
     });
 
 var app = builder.Build();

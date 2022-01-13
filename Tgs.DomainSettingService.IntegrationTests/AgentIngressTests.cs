@@ -21,10 +21,7 @@ public class AgentIngressTests
     {
         var fakeApplyService = Substitute.For<ICommandService<ApplyAgentDomainIngressCommand>>();
 
-        await using var web = CreateTestDomainSettingSite(services =>
-        {
-            services.AddSingleton(fakeApplyService);
-        });
+        await using var web = CreateTestDomainSettingSite(services => services.AddSingleton(fakeApplyService));
 
         var httpClient = web.CreateClient();
 
@@ -52,10 +49,7 @@ public class AgentIngressTests
     {
         var fakeDeleteService = Substitute.For<ICommandService<DeleteAgentDomainIngressCommand>>();
 
-        await using var web = CreateTestDomainSettingSite(services =>
-        {
-            services.AddSingleton(fakeDeleteService);
-        });
+        await using var web = CreateTestDomainSettingSite(services => services.AddSingleton(fakeDeleteService));
 
         var httpClient = web.CreateClient();
 
@@ -78,22 +72,17 @@ public class AgentIngressTests
             .ExecuteAsync(Arg.Any<DeleteAgentDomainIngressCommand>());
     }
 
-    private WebApplicationFactory<Program> CreateTestDomainSettingSite(Action<IServiceCollection>? configureServices = null)
+    private static WebApplicationFactory<Program> CreateTestDomainSettingSite(Action<IServiceCollection>? configureServices = null)
         => new WebApplicationFactory<Program>()
-        .WithWebHostBuilder(hostBuilder =>
-        {
-            hostBuilder
-                .ConfigureAppConfiguration((_, configBuilder) =>
-                {
-                    configBuilder.Sources.Clear();
-                })
+            .WithWebHostBuilder(hostBuilder => hostBuilder
+                .ConfigureAppConfiguration((_, configBuilder) => configBuilder.Sources.Clear())
                 .ConfigureServices(services =>
                 {
-                    services
+                    _ = services
                         .AddSingleton(sp =>
                         {
                             var dbContextOptionsBuilder = new DbContextOptionsBuilder<TgsContext>();
-                            dbContextOptionsBuilder
+                            _ = dbContextOptionsBuilder
                                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                                 .ConfigureWarnings(x => x.Ignore(
                                     InMemoryEventId.TransactionIgnoredWarning));
@@ -102,6 +91,5 @@ public class AgentIngressTests
                         });
 
                     configureServices?.Invoke(services);
-                });
-        });
+                }));
 }
