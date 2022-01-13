@@ -4,7 +4,7 @@ pipeline {
     agent any
     environment {
         BuildConfiguration='Debug'
-        ImageName="harbor.rpgp.cc/tgs/agent-domain"
+        ImageName="harbor.rpgp.cc/tgs/domain-setting"
     }
     stages {
         stage('Prepare') {
@@ -58,9 +58,16 @@ pipeline {
 			}
 		}
 
+        stage('Push packages') {
+			steps {
+				sh 'dotnet pack -c $BuildConfiguration "Tgs.DomainSetting.Client/Tgs.DomainSetting.Client.csproj" --no-build'
+				sh 'dotnet nuget push "Tgs.DomainSetting.Client/bin/$BuildConfiguration/*.nupkg" -s "raypro-baget" -k admin --skip-duplicate'
+			}
+		}
+
 		stage('Build Docker Image') {
 			steps {
-				sh 'dotnet build "Tgs.AgentDomainSettingService/Tgs.AgentDomainSettingService.csproj" -c $BuildConfiguration -t:ContainerBuild -p:DockerfileTag="$ImageName:${TAG}" --no-restore '
+				sh 'dotnet build "Tgs.DomainSettingService/Tgs.DomainSettingService.csproj" -c $BuildConfiguration -t:ContainerBuild -p:DockerfileTag="$ImageName:${TAG}" --no-restore '
 			}
 		}
 
@@ -91,12 +98,12 @@ pipeline {
                 withKubeConfig([credentialsId: env.k8s_config]) {
                     withCredentials([string(credentialsId: "tgs-${kube_ns}-connectionstring", variable: "conn")]) {
                         sh '''
-                            helm template deployment/k8s/agent-domain \
+                            helm template deployment/k8s/domain-setting \
                                 --set image.tag=${TAG} \
                                 --set namespace=${kube_ns}
                         '''
                         sh '''
-                            helm template deployment/k8s/agent-domain \
+                            helm template deployment/k8s/domain-setting \
                                 --set image.tag=${TAG} \
                                 --set namespace=${kube_ns} \
                                 | kubectl -n ${kube_ns} apply -f -
@@ -116,13 +123,6 @@ pipeline {
                 sshagent(['ssh-jenkins']) {
                     sh "git tag -a ${TAG} -m ${TAG}"
                     sh "git push ${GIT_URL} ${TAG} HEAD:${GIT_BRANCH}"
-                }
-            }
-        }
-        stage('Remove Image Tags') {					
-            steps {	
-                withCredentials([string(credentialsId: "GitLabToken", variable: "GitLabToken")]) {					
-                    sh "curl --request DELETE --data \'name_regex_delete=.*\' --data \'keep_n=10\' --header \'PRIVATE-TOKEN: ${GitLabToken}\' ${ImageTagUrl}"
                 }
             }
         }
