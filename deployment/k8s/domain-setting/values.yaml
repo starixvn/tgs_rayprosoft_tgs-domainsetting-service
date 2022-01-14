@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: cr.rpgp.cc/tgs/domain-setting
+  repository: cr.yggdrasill.dev/tgs/domain-setting
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"

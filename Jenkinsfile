@@ -4,7 +4,7 @@ pipeline {
     agent any
     environment {
         BuildConfiguration='Debug'
-        ImageName="cr.rpgp.cc/tgs/domain-setting"
+        ImageName="cr.yggdrasill.dev/tgs/domain-setting"
     }
     stages {
         stage('Prepare') {
