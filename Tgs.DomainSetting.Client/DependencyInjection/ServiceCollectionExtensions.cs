@@ -6,7 +6,7 @@ namespace Microsoft.Extensions.DependencyInjection;
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddDomainSettingClient(
-        IServiceCollection services,
+        this IServiceCollection services,
         Action<DomainSettingClientOptions, IServiceProvider> configure)
         => services
             .AddOptions<DomainSettingClientOptions>()
