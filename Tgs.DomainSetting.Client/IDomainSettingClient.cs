@@ -1,7 +1,7 @@
 ﻿
 namespace Tgs.DomainSettings.Clients;
 
-internal interface IDomainSettingClient
+public interface IDomainSettingClient
 {
     ValueTask ApplyAgentDomainIngressAsync(Guid agentId);
     ValueTask CreateZoneAsync(Guid agentId);

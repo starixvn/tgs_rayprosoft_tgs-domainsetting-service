@@ -8,7 +8,7 @@ public static class ServiceCollectionExtensions
 {
     public static AgentDomainConfiguration AddAgentDomainSetting(this IServiceCollection services)
     {
-        services
+        _ = services
             .RegisterAllServiceUtilityTypes(Assembly.GetExecutingAssembly(), ServiceLifetime.Transient)
             .AddTransient<IKubernetesClientService, KubernetesClientService>();
 

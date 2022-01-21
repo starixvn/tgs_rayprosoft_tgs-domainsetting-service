@@ -17,7 +17,7 @@ internal class DeleteDnsZoneInfoCommandService : ICommandService<DeleteDnsZoneIn
     {
         var agentDomains = await _tgsRepository
             .QueryAgentDomainsAsync(command.AgentId)
-            .ToArrayAsync()
+            .ToArrayAsync(cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
         if (!agentDomains.Any())
@@ -27,7 +27,7 @@ internal class DeleteDnsZoneInfoCommandService : ICommandService<DeleteDnsZoneIn
         {
             var zone = await _cloudflareClient.ListZonesAsync(domain)
                 .Where(z => z.DomainName == domain)
-                .FirstOrDefaultAsync()
+                .FirstOrDefaultAsync(cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
 
             if (zone is not null)

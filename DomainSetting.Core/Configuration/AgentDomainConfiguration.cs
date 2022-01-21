@@ -18,7 +18,7 @@ public class AgentDomainConfiguration
         Func<IServiceProvider, KubernetesClientConfiguration> k8sConfigFactory,
         Func<IServiceProvider, DelegatingHandler[]>? registerHttpClientHandlerFactory = null)
     {
-        Services
+        _ = Services
             .AddSingleton(k8sConfigFactory)
             .AddSingleton(sp => new Kubernetes(
                 sp.GetRequiredService<KubernetesClientConfiguration>(),
@@ -29,7 +29,7 @@ public class AgentDomainConfiguration
 
     public AgentDomainConfiguration ConfigureCloudflareOptions(Action<CloudflareOptions, IServiceProvider> cloudflareConfigure)
     {
-        Services
+        _ = Services
             .AddTransient(sp => sp.GetRequiredService<IOptions<CloudflareOptions>>().Value)
             .AddOptions<CloudflareOptions>()
             .Configure(cloudflareConfigure);
