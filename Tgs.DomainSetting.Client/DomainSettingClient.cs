@@ -12,10 +12,10 @@ internal class DomainSettingClient : IDomainSettingClient
     public async ValueTask ApplyAgentDomainIngressAsync(Guid agentId)
     {
         var response = await _httpClient
-            .PutAsync($"/agent/{agentId}", null)
+            .PutAsync($"/agent/{agentId}", null!)
             .ConfigureAwait(false);
 
-        response.EnsureSuccessStatusCode();
+        _ = response.EnsureSuccessStatusCode();
     }
 
     public async ValueTask DeleteAgentDomainIngressAsync(Guid agentId)
@@ -24,16 +24,16 @@ internal class DomainSettingClient : IDomainSettingClient
             .DeleteAsync($"/agent/{agentId}")
             .ConfigureAwait(false);
 
-        response.EnsureSuccessStatusCode();
+        _ = response.EnsureSuccessStatusCode();
     }
 
     public async ValueTask CreateZoneAsync(Guid agentId)
     {
         var response = await _httpClient
-            .PutAsync($"/cf/{agentId}", null)
+            .PutAsync($"/cf/{agentId}", null!)
             .ConfigureAwait(false);
 
-        response.EnsureSuccessStatusCode();
+        _ = response.EnsureSuccessStatusCode();
     }
 
     public async ValueTask DeleteZoneAsync(Guid agentId)
@@ -42,6 +42,6 @@ internal class DomainSettingClient : IDomainSettingClient
             .DeleteAsync($"/cf/{agentId}")
             .ConfigureAwait(false);
 
-        response.EnsureSuccessStatusCode();
+        _ = response.EnsureSuccessStatusCode();
     }
 }

@@ -23,11 +23,9 @@ public class CloudflareAgentZoneTests
         var fakeCreateService = Substitute.For<ICommandService<CreateDnsZoneInfoCommand>>();
         var fakeCloudflareService = Substitute.For<ICloudflareClientService>();
 
-        await using var web = CreateTestDomainSettingSite(services =>
-        {
-            services.AddSingleton(fakeCreateService);
-            services.AddSingleton(fakeCloudflareService);
-        });
+        await using var web = CreateTestDomainSettingSite(services => services
+                .AddSingleton(fakeCreateService)
+                .AddSingleton(fakeCloudflareService));
 
         var httpClient = web.CreateClient();
 
@@ -56,11 +54,9 @@ public class CloudflareAgentZoneTests
         var fakeCreateService = Substitute.For<ICommandService<DeleteDnsZoneInfoCommand>>();
         var fakeCloudflareService = Substitute.For<ICloudflareClientService>();
 
-        await using var web = CreateTestDomainSettingSite(services =>
-        {
-            services.AddSingleton(fakeCreateService);
-            services.AddSingleton(fakeCloudflareService);
-        });
+        await using var web = CreateTestDomainSettingSite(services => services
+            .AddSingleton(fakeCreateService)
+            .AddSingleton(fakeCloudflareService));
 
         var httpClient = web.CreateClient();
 
@@ -83,30 +79,24 @@ public class CloudflareAgentZoneTests
             .ExecuteAsync(Arg.Any<DeleteDnsZoneInfoCommand>());
     }
 
-    private WebApplicationFactory<Program> CreateTestDomainSettingSite(Action<IServiceCollection>? configureServices = null)
+    private static WebApplicationFactory<Program> CreateTestDomainSettingSite(Action<IServiceCollection>? configureServices = null)
         => new WebApplicationFactory<Program>()
-        .WithWebHostBuilder(hostBuilder =>
-        {
-            hostBuilder
-                .ConfigureAppConfiguration((_, configBuilder) =>
-                {
-                    configBuilder.Sources.Clear();
-                })
-                .ConfigureServices(services =>
-                {
-                    services
-                        .AddSingleton(sp =>
-                        {
-                            var dbContextOptionsBuilder = new DbContextOptionsBuilder<TgsContext>();
-                            dbContextOptionsBuilder
-                                .UseInMemoryDatabase(Guid.NewGuid().ToString())
-                                .ConfigureWarnings(x => x.Ignore(
-                                    InMemoryEventId.TransactionIgnoredWarning));
+        .WithWebHostBuilder(hostBuilder => hostBuilder
+            .ConfigureAppConfiguration((_, configBuilder) => configBuilder.Sources.Clear())
+            .ConfigureServices(services =>
+            {
+                _ = services
+                    .AddSingleton(sp =>
+                    {
+                        var dbContextOptionsBuilder = new DbContextOptionsBuilder<TgsContext>();
+                        _ = dbContextOptionsBuilder
+                            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+                            .ConfigureWarnings(x => x.Ignore(
+                                InMemoryEventId.TransactionIgnoredWarning));
 
-                            return new TgsContext(dbContextOptionsBuilder.Options);
-                        });
+                        return new TgsContext(dbContextOptionsBuilder.Options);
+                    });
 
-                    configureServices?.Invoke(services);
-                });
-        });
+                configureServices?.Invoke(services);
+            }));
 }

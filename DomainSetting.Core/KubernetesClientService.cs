@@ -22,12 +22,11 @@ internal class KubernetesClientService : IKubernetesClientService
             _kubernetesConfig.Namespace,
             fieldSelector: $"metadata.name={ingress.Name()}").ConfigureAwait(false);
 
-        if (deployedIngresses.Items.Count() > 0)
-            await _kubernetesClient
+        _ = deployedIngresses.Items.Count > 0
+            ? await _kubernetesClient
                 .ReplaceNamespacedIngressAsync(ingress, ingress.Name(), _kubernetesConfig.Namespace)
-                .ConfigureAwait(false);
-        else
-            await _kubernetesClient
+                .ConfigureAwait(false)
+            : await _kubernetesClient
                 .CreateNamespacedIngressAsync(ingress, _kubernetesConfig.Namespace)
                 .ConfigureAwait(false);
     }

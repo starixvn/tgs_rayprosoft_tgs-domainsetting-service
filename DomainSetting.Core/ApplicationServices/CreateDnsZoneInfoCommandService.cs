@@ -22,7 +22,7 @@ internal class CreateDnsZoneInfoCommandService : ICommandService<CreateDnsZoneIn
     {
         var agentDomains = await _tgsRepository
             .QueryAgentDomainsAsync(command.AgentId)
-            .ToArrayAsync()
+            .ToArrayAsync(cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
         if (!agentDomains.Any())

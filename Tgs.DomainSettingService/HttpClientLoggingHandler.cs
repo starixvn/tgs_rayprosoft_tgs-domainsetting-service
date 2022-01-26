@@ -16,7 +16,8 @@ public class HttpClientLoggingHandler : DelegatingHandler
 
         if (request.Content != null)
         {
-            _logger.LogInformation($"Request Body: {await request.Content.ReadAsStringAsync().ConfigureAwait(false)}");
+            _logger.LogInformation(
+                $"Request Body: {await request.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false)}");
         }
 
         HttpResponseMessage response = await base
@@ -26,7 +27,7 @@ public class HttpClientLoggingHandler : DelegatingHandler
         _logger.LogInformation($"Response: {response}");
         if (response.Content != null)
         {
-            _logger.LogInformation($"Response Body: {await response.Content.ReadAsStringAsync().ConfigureAwait(false)}");
+            _logger.LogInformation($"Response Body: {await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false)}");
         }
 
         return response;

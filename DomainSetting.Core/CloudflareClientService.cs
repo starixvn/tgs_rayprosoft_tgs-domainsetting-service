@@ -6,7 +6,7 @@ namespace Tgs.DomainSettings;
 
 internal class CloudflareClientService : ICloudflareClientService
 {
-    private static readonly JsonSerializerOptions _JsonSerializerOptions = new JsonSerializerOptions
+    private static readonly JsonSerializerOptions _JsonSerializerOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
@@ -59,12 +59,11 @@ internal class CloudflareClientService : ICloudflareClientService
             .ReadFromJsonAsync<CloudflareResponse<CloudflareDnsZone>>(_JsonSerializerOptions)
             .ConfigureAwait(false);
 
-        if (responseData?.Success != true)
-            throw new Exception(string.Join(
+        return (responseData?.Success) == true
+            ? responseData.Result!
+            : throw new Exception(string.Join(
                 Environment.NewLine,
                 responseData?.Errors.Select(error => $"{error.Code}: {error.Message}") ?? Array.Empty<string>()));
-
-        return responseData.Result!;
     }
 
     public async ValueTask DeleteZoneAsync(string zoneId)

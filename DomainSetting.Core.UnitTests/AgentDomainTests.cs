@@ -25,10 +25,10 @@ public class AgentDomainTests
         var command = new ApplyAgentDomainIngressCommand(
             Guid.NewGuid());
 
-        fakeTgsRepository.QueryAgentDomainsAsync(Arg.Is(command.AgentId))
+        _ = fakeTgsRepository.QueryAgentDomainsAsync(Arg.Is(command.AgentId))
             .Returns(new[] { "test.com" }.ToAsyncEnumerable());
 
-        fakeTgsRepository.GetAgentByIdAsync(Arg.Is(command.AgentId))
+        _ = fakeTgsRepository.GetAgentByIdAsync(Arg.Is(command.AgentId))
             .Returns(new Agent
             {
                 Id = command.AgentId,
@@ -36,7 +36,7 @@ public class AgentDomainTests
                 InvitationCode = "invitation"
             });
 
-        fakeBrandCertClient.MakeJsonWebTokenAsync(Arg.Any<Guid>())
+        _ = fakeBrandCertClient.MakeJsonWebTokenAsync(Arg.Any<Guid>())
             .Returns("token");
 
         fakeKubernetestClient
@@ -79,7 +79,7 @@ public class AgentDomainTests
             .DeleteIngressAsync(Arg.Is(expectedIngressName));
     }
 
-    private bool ValidateIngress(V1Ingress ing)
+    private static bool ValidateIngress(V1Ingress ing)
     {
         try
         {
