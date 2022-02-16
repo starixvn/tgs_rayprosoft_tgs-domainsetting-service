@@ -53,12 +53,12 @@ internal class ApplyAgentDomainIngressCommandService : ICommandService<ApplyAgen
 
         var ingress = await Yaml.LoadFromStreamAsync<V1Ingress>(templateStream).ConfigureAwait(false);
 
-        ingress.Metadata.Name = $"ing-agent-{command.AgentId:D}";
+        ingress.Metadata.Name = $"ing-agent-{agent.BrandCode.ToLower()}-{agent.Name.Trim().ToLower()}";
         ingress.SetAnnotation(
             "nginx.ingress.kubernetes.io/configuration-snippet",
             BuildNginxConfigurationSnippet(brandToken, agent.InvitationCode));
 
-        var ingressTls = new V1IngressTLS(new List<string>(), $"agent-{command.AgentId:D}");
+        var ingressTls = new V1IngressTLS(new List<string>(), $"agent-{agent.BrandCode.ToLower()}-{agent.Name.Trim().ToLower()}");
 
         ingress.Spec.Tls = new List<V1IngressTLS> { ingressTls };
         ingress.Spec.Rules = new List<V1IngressRule>();
