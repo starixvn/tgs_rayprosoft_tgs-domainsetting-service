@@ -1,12 +1,13 @@
-[
-  {
-    "UseSchemaName": false,
-    "SchemaName": "dbo",
-    "Tables": [
-      {
-        "Name": "agents",
-        "NewName": "AgentRow"
-      }
-    ]
-  }
+﻿[
+   {
+      "SchemaName": "dbo",
+      "Tables": [
+         {
+            "Columns": [ ],
+            "Name": "agents",
+            "NewName": "AgentRow"
+         }
+      ],
+      "UseSchemaName": false
+   }
 ]

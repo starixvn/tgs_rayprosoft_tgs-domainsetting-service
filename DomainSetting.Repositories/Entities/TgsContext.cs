@@ -21,6 +21,7 @@ namespace Tgs.AgentDomainSettings.Repositories.Entities
 
         public virtual DbSet<AgentDomain> AgentDomains { get; set; } = null!;
         public virtual DbSet<AgentRow> AgentRows { get; set; } = null!;
+        public virtual DbSet<Brand> Brands { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,6 +29,7 @@ namespace Tgs.AgentDomainSettings.Repositories.Entities
 
             modelBuilder.ApplyConfiguration(new Configurations.AgentDomainConfiguration());
             modelBuilder.ApplyConfiguration(new Configurations.AgentRowConfiguration());
+            modelBuilder.ApplyConfiguration(new Configurations.BrandConfiguration());
             OnModelCreatingPartial(modelBuilder);
         }
 

@@ -24,12 +24,21 @@ internal class TgsRepository : ITgsRepository
             .FindAsync(agentId)
             .ConfigureAwait(false);
 
+        if (row is null)
+            return null;
+
+        var brand = await _dbContext.Brands
+            .FindAsync(row.BrandId)
+            .ConfigureAwait(false);
+
         return row is null
             ? null
             : new Agent
             {
                 Id = row.Id,
+                Name = row.Username,
                 BrandId = row.BrandId,
+                BrandCode = brand!.Code,
                 InvitationCode = row.InvitationCode
             };
     }
