@@ -47,6 +47,7 @@ namespace Tgs.AgentDomainSettings.Repositories.Entities
         public DateTime CreatedOn { get; set; }
         public DateTime UpdatedOn { get; set; }
 
+        public virtual Brand Brand { get; set; } = null!;
         public virtual AgentRow? ParentAgent { get; set; }
         public virtual ICollection<AgentDomain> AgentDomains { get; set; }
         public virtual ICollection<AgentRow> InverseParentAgent { get; set; }

@@ -32,7 +32,9 @@ public class AgentDomainTests
             .Returns(new Agent
             {
                 Id = command.AgentId,
+                Name = "agent1",
                 BrandId = Guid.NewGuid(),
+                BrandCode = "test",
                 InvitationCode = "invitation"
             });
 
@@ -65,13 +67,24 @@ public class AgentDomainTests
     [TestMethod]
     public async Task Delete_AgentDomain_Ingress_Test()
     {
+        var fakeTgsRepository = Substitute.For<ITgsRepository>();
         var fakeKubernetesClient = Substitute.For<IKubernetesClientService>();
 
-        var sut = new DeleteAgentDomainIngressCommandService(fakeKubernetesClient);
+        var sut = new DeleteAgentDomainIngressCommandService(fakeTgsRepository, fakeKubernetesClient);
 
         var command = new DeleteAgentDomainIngressCommand(Guid.NewGuid());
 
-        var expectedIngressName = $"ing-agent-{command.AgentId:D}";
+        _ = fakeTgsRepository.GetAgentByIdAsync(Arg.Is(command.AgentId))
+            .Returns(new Agent
+            {
+                Id = command.AgentId,
+                Name = "agent1",
+                BrandId = Guid.NewGuid(),
+                BrandCode = "test",
+                InvitationCode = "invitation"
+            });
+
+        var expectedIngressName = $"ing-agent-test-agent1";
 
         await sut.ExecuteAsync(command);
 
