@@ -10,6 +10,6 @@ data:
         "BrandCertificateBaseUrl": "http://brand-cert-api"
       },
       "Cloudflare": {
-        "TgsDomain": "220.132.206.70"
+        "TgsDomain": "ac14ad4ad050b4a71b144385e51a20f5-1241810226.ap-east-1.elb.amazonaws.com"
       }
     }
