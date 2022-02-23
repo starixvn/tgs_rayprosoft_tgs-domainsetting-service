@@ -4,17 +4,26 @@ namespace Tgs.DomainSettings.ApplicationServices;
 
 internal class DeleteAgentDomainIngressCommandService : ICommandService<DeleteAgentDomainIngressCommand>
 {
+    private readonly ITgsRepository _tgsRepository;
     private readonly IKubernetesClientService _kubernetesClientService;
 
-    public DeleteAgentDomainIngressCommandService(IKubernetesClientService kubernetesClientService)
+    public DeleteAgentDomainIngressCommandService(ITgsRepository tgsRepository, IKubernetesClientService kubernetesClientService)
     {
+        _tgsRepository = tgsRepository ?? throw new ArgumentNullException(nameof(tgsRepository));
         _kubernetesClientService = kubernetesClientService ?? throw new ArgumentNullException(nameof(kubernetesClientService));
     }
 
-    public ValueTask ExecuteAsync(DeleteAgentDomainIngressCommand command, CancellationToken cancellationToken = default)
+    public async ValueTask ExecuteAsync(DeleteAgentDomainIngressCommand command, CancellationToken cancellationToken = default)
     {
-        var ingressName = $"ing-agent-{command.AgentId:D}";
+        var agent = await _tgsRepository
+            .GetAgentByIdAsync(command.AgentId)
+            .ConfigureAwait(false);
 
-        return _kubernetesClientService.DeleteIngressAsync(ingressName);
+        if (agent is null)
+            return;
+
+        var ingressName = $"ing-agent-{agent.BrandCode.ToLower()}-{agent.Name.Trim().ToLower()}";
+
+        await _kubernetesClientService.DeleteIngressAsync(ingressName).ConfigureAwait(false);
     }
 }

@@ -53,12 +53,15 @@ internal class ApplyAgentDomainIngressCommandService : ICommandService<ApplyAgen
 
         var ingress = await Yaml.LoadFromStreamAsync<V1Ingress>(templateStream).ConfigureAwait(false);
 
-        ingress.Metadata.Name = $"ing-agent-{command.AgentId:D}";
+        ingress.Metadata.Name = $"ing-agent-{agent.BrandCode.ToLower()}-{agent.Name.Trim().ToLower()}";
         ingress.SetAnnotation(
             "nginx.ingress.kubernetes.io/configuration-snippet",
             BuildNginxConfigurationSnippet(brandToken, agent.InvitationCode));
+        ingress.SetLabel("tgs.brandcode", agent.BrandCode);
+        ingress.SetLabel("tgs.invitation", agent.InvitationCode);
+        ingress.SetLabel("tgs.agent.username", agent.Name);
 
-        var ingressTls = new V1IngressTLS(new List<string>(), $"agent-{command.AgentId:D}");
+        var ingressTls = new V1IngressTLS(new List<string>(), $"agent-{agent.BrandCode.ToLower()}-{agent.Name.Trim().ToLower()}");
 
         ingress.Spec.Tls = new List<V1IngressTLS> { ingressTls };
         ingress.Spec.Rules = new List<V1IngressRule>();
@@ -73,15 +76,6 @@ internal class ApplyAgentDomainIngressCommandService : ICommandService<ApplyAgen
 
         var yaml = Yaml.SaveToString(ingress);
         await _kubernetesClientService.ApplyIngressAsync(ingress).ConfigureAwait(false);
-    }
-
-    private string BuildNginxConfigurationSnippet(string brandToken, string invitationCode)
-    {
-        var sb = new StringBuilder()
-            .AppendLine($"proxy_set_header Brand-Token {brandToken};")
-            .AppendLine($"proxy_set_header Agent-Invitation-Code {invitationCode};");
-
-        return sb.ToString();
     }
 
     private static V1IngressRule CreateIngressRule(string domainName)
@@ -113,5 +107,14 @@ internal class ApplyAgentDomainIngressCommandService : ICommandService<ApplyAgen
         ingressRule.Http.Paths.Add(lobbyPath);
 
         return ingressRule;
+    }
+
+    private string BuildNginxConfigurationSnippet(string brandToken, string invitationCode)
+    {
+        var sb = new StringBuilder()
+            .AppendLine($"proxy_set_header Brand-Token {brandToken};")
+            .AppendLine($"proxy_set_header Agent-Invitation-Code {invitationCode};");
+
+        return sb.ToString();
     }
 }
