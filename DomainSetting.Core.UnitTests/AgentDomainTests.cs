@@ -58,6 +58,13 @@ public class AgentDomainTests
                 Assert.AreEqual("test.com", ing.Spec.Rules[0].Host);
             });
 
+        var brandIngress = new V1Ingress(spec: new V1IngressSpec(rules: new List<V1IngressRule>()));
+
+        brandIngress.Spec.Rules.Add(CreateIngressRule("test.com"));
+
+        fakeKubernetestClient.GetIngressAsync(Arg.Any<string>())
+            .Returns(brandIngress);
+
         await sut.ExecuteAsync(command);
 
         _ = fakeKubernetestClient.Received(1)
@@ -92,6 +99,36 @@ public class AgentDomainTests
             .DeleteIngressAsync(Arg.Is(expectedIngressName));
     }
 
+    private static V1IngressRule CreateIngressRule(string domainName)
+    {
+        var ingressRule = new V1IngressRule(domainName, new V1HTTPIngressRuleValue(new List<V1HTTPIngressPath>()));
+
+        var brandCommunicationPath = new V1HTTPIngressPath(
+            new V1IngressBackend(service: new V1IngressServiceBackend("brand-api", new V1ServiceBackendPort(number: 80))),
+            "Prefix",
+            "/api/brandcommunication");
+        ingressRule.Http.Paths.Add(brandCommunicationPath);
+
+        var brandLiveChatPath = new V1HTTPIngressPath(
+            new V1IngressBackend(service: new V1IngressServiceBackend("brand-api", new V1ServiceBackendPort(number: 80))),
+            "Prefix",
+            "/api/brandlivechat");
+        ingressRule.Http.Paths.Add(brandLiveChatPath);
+
+        var opApiPath = new V1HTTPIngressPath(
+            new V1IngressBackend(service: new V1IngressServiceBackend("operator-api", new V1ServiceBackendPort(number: 80))),
+            "Prefix",
+            "/api");
+        ingressRule.Http.Paths.Add(opApiPath);
+
+        var lobbyPath = new V1HTTPIngressPath(
+            new V1IngressBackend(service: new V1IngressServiceBackend("lobby-t1", new V1ServiceBackendPort(number: 80))),
+            "Prefix",
+            "/");
+        ingressRule.Http.Paths.Add(lobbyPath);
+
+        return ingressRule;
+    }
     private static bool ValidateIngress(V1Ingress ing)
     {
         try
