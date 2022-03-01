@@ -35,4 +35,9 @@ internal class KubernetesClientService : IKubernetesClientService
         => await _kubernetesClient
             .DeleteNamespacedIngressAsync(ingressName, _kubernetesConfig.Namespace)
             .ConfigureAwait(false);
+
+    public async ValueTask<V1Ingress> GetIngressAsync(string ingressName)
+        => await _kubernetesClient
+            .ReadNamespacedIngressAsync(ingressName, _kubernetesConfig.Namespace)
+            .ConfigureAwait(false);
 }

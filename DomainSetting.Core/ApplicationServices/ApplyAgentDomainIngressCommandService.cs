@@ -49,6 +49,10 @@ internal class ApplyAgentDomainIngressCommandService : ICommandService<ApplyAgen
         if (string.IsNullOrWhiteSpace(brandToken))
             return;
 
+        var brandIngress = await _kubernetesClientService
+            .GetIngressAsync($"lobby-{agent.BrandCode.ToLower()}")
+            .ConfigureAwait(false);
+
         using var templateStream = new MemoryStream(Resources.ingress);
 
         var ingress = await Yaml.LoadFromStreamAsync<V1Ingress>(templateStream).ConfigureAwait(false);
@@ -68,9 +72,9 @@ internal class ApplyAgentDomainIngressCommandService : ICommandService<ApplyAgen
 
         foreach (var domainName in agentDomains)
         {
-            var ingressRule = CreateIngressRule(domainName);
-
-            ingress.Spec.Rules.Add(ingressRule);
+            ingress.Spec.Rules.Add(new V1IngressRule(
+                domainName,
+                new V1HTTPIngressRuleValue(brandIngress.Spec.Rules[0].Http.Paths)));
             ingressTls.Hosts.Add(domainName);
         }
 
@@ -78,38 +82,7 @@ internal class ApplyAgentDomainIngressCommandService : ICommandService<ApplyAgen
         await _kubernetesClientService.ApplyIngressAsync(ingress).ConfigureAwait(false);
     }
 
-    private static V1IngressRule CreateIngressRule(string domainName)
-    {
-        var ingressRule = new V1IngressRule(domainName, new V1HTTPIngressRuleValue(new List<V1HTTPIngressPath>()));
-
-        var brandCommunicationPath = new V1HTTPIngressPath(
-            new V1IngressBackend(service: new V1IngressServiceBackend("brand-api", new V1ServiceBackendPort(number: 80))),
-            "Prefix",
-            "/api/brandcommunication");
-        ingressRule.Http.Paths.Add(brandCommunicationPath);
-
-        var brandLiveChatPath = new V1HTTPIngressPath(
-            new V1IngressBackend(service: new V1IngressServiceBackend("brand-api", new V1ServiceBackendPort(number: 80))),
-            "Prefix",
-            "/api/brandlivechat");
-        ingressRule.Http.Paths.Add(brandLiveChatPath);
-
-        var opApiPath = new V1HTTPIngressPath(
-            new V1IngressBackend(service: new V1IngressServiceBackend("operator-api", new V1ServiceBackendPort(number: 80))),
-            "Prefix",
-            "/api");
-        ingressRule.Http.Paths.Add(opApiPath);
-
-        var lobbyPath = new V1HTTPIngressPath(
-            new V1IngressBackend(service: new V1IngressServiceBackend("lobby-t1", new V1ServiceBackendPort(number: 80))),
-            "Prefix",
-            "/");
-        ingressRule.Http.Paths.Add(lobbyPath);
-
-        return ingressRule;
-    }
-
-    private string BuildNginxConfigurationSnippet(string brandToken, string invitationCode)
+    private static string BuildNginxConfigurationSnippet(string brandToken, string invitationCode)
     {
         var sb = new StringBuilder()
             .AppendLine($"proxy_set_header Brand-Token {brandToken};")
