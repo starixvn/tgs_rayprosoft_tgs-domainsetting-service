@@ -114,7 +114,7 @@ pipeline {
                             }
                         '''
                         sh '''
-                            helm template deployment/k8s/domain-setting \
+                            cat << EOF | yq e -P | helm template deployment/k8s/domain-setting \
                                 -n ${kube_ns} \
                                 --set image.tag=${TAG} \
                                 -f - \
