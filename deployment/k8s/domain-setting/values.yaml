@@ -10,8 +10,6 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
 
-namespace: dev
-
 imagePullSecrets:
   - name: secret-tgs-harbor
 nameOverride: "domain-setting"

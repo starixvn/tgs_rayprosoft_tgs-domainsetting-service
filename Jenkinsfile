@@ -1,3 +1,4 @@
+@Library('global-shared-library') _;
 def message = "";
 
 pipeline {
@@ -95,18 +96,34 @@ pipeline {
 
         stage('Deploy to k8s') {
             steps {
-                withKubeConfig([credentialsId: env.k8s_config]) {
-                    withCredentials([string(credentialsId: "tgs-${kube_ns}-connectionstring", variable: "conn")]) {
+                script {
+                    withKubeConfig([credentialsId: env.k8s_config]) {
+                        def resources = getResources(env.k8s_config, env.kube_ns, "domain-setting")
+                        def dedicated = getTgsSettings(env.k8s_config, env.kube_ns, "dedicated")
+                        def node_selector = getTgsSettings(env.k8s_config, env.kube_ns, "node-selector")
+
                         sh '''
-                            helm template deployment/k8s/domain-setting \
+                            cat << EOF | yq e -P | helm template deployment/k8s/domain-setting \
+                                -n ${kube_ns} \
                                 --set image.tag=${TAG} \
-                                --set namespace=${kube_ns}
+                                -f -
+                            {
+                                "nodeSelector": $node_selector,
+                                "tolerations": [$dedicated],
+                                "resources": $resources
+                            }
                         '''
                         sh '''
-                            helm template deployment/k8s/domain-setting \
+                            cat << EOF | yq e -P | helm template deployment/k8s/domain-setting \
+                                -n ${kube_ns} \
                                 --set image.tag=${TAG} \
-                                --set namespace=${kube_ns} \
+                                -f - \
                                 | kubectl -n ${kube_ns} apply -f -
+                            {
+                                "nodeSelector": $node_selector,
+                                "tolerations": [$dedicated],
+                                "resources": $resources
+                            }
                         '''
                     }
                 }
@@ -138,19 +155,5 @@ pipeline {
         failure {
             sendTelegram("<b>Failed Pipeline:</b> ${currentBuild.fullDisplayName} Something is wrong with ${env.BUILD_URL}/console\n${currentBuild.getBuildCauses()[0].shortDescription}\n")
         }
-    }
-}
-
-def sendTelegram(message) {
-    def encodedMessage = URLEncoder.encode(message, "UTF-8")
-
-    withCredentials([string(credentialsId: "telegramToken", variable: "TOKEN"), string(credentialsId: "telegramChatId", variable: "CHAT_ID")]) {
-
-        response = httpRequest (consoleLogResponseBody: true,
-                contentType: 'APPLICATION_JSON',
-                httpMode: 'GET',
-                url: "https://api.telegram.org/bot${TOKEN}/sendMessage?text=${encodedMessage}&chat_id=${CHAT_ID}",
-                validResponseCodes: '200')
-        return response
     }
 }
