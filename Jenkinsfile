@@ -96,34 +96,36 @@ pipeline {
 
         stage('Deploy to k8s') {
             steps {
-                withKubeConfig([credentialsId: env.k8s_config]) {
-                    def resources = getResources(env.k8s_config, env.kube_ns, "domain-setting")
-                    def dedicated = getTgsSettings(env.k8s_config, env.kube_ns, "dedicated")
-                    def node_selector = getTgsSettings(env.k8s_config, env.kube_ns, "node-selector")
+                script {
+                    withKubeConfig([credentialsId: env.k8s_config]) {
+                        def resources = getResources(env.k8s_config, env.kube_ns, "domain-setting")
+                        def dedicated = getTgsSettings(env.k8s_config, env.kube_ns, "dedicated")
+                        def node_selector = getTgsSettings(env.k8s_config, env.kube_ns, "node-selector")
 
-                    sh '''
-                        cat << EOF | yq e -P | helm template deployment/k8s/domain-setting \
-                            -n ${kube_ns} \
-                            --set image.tag=${TAG} \
-                            -f -
-                        {
-                            "nodeSelector": $node_selector,
-                            "tolerations": [$dedicated],
-                            "resources": $resources
-                        }
-                    '''
-                    sh '''
-                        helm template deployment/k8s/domain-setting \
-                            -n ${kube_ns} \
-                            --set image.tag=${TAG} \
-                            -f - \
-                            | kubectl -n ${kube_ns} apply -f -
-                        {
-                            "nodeSelector": $node_selector,
-                            "tolerations": [$dedicated],
-                            "resources": $resources
-                        }
-                    '''
+                        sh '''
+                            cat << EOF | yq e -P | helm template deployment/k8s/domain-setting \
+                                -n ${kube_ns} \
+                                --set image.tag=${TAG} \
+                                -f -
+                            {
+                                "nodeSelector": $node_selector,
+                                "tolerations": [$dedicated],
+                                "resources": $resources
+                            }
+                        '''
+                        sh '''
+                            helm template deployment/k8s/domain-setting \
+                                -n ${kube_ns} \
+                                --set image.tag=${TAG} \
+                                -f - \
+                                | kubectl -n ${kube_ns} apply -f -
+                            {
+                                "nodeSelector": $node_selector,
+                                "tolerations": [$dedicated],
+                                "resources": $resources
+                            }
+                        '''
+                    }
                 }
             }
         }
