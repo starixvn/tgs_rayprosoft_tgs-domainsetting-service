@@ -40,6 +40,14 @@ public class CloudflareTests
 
         _ = fakeCloudflareClient.Received(2)
             .CreateCNameInZoneAsync(Arg.Is("testId"), Arg.Any<string>(), Arg.Any<string>());
+        _ = fakeCloudflareClient.Received(1)
+            .SetZoneAutomaticHttpsRewritesAsync(Arg.Is("testId"));
+        _ = fakeCloudflareClient.Received(1)
+            .SetZoneAlwaysUseHttpsAsync(Arg.Is("testId"));
+        _ = fakeCloudflareClient.Received(1)
+            .SetZoneResultMinifyAsync(Arg.Is("testId"));
+        _ = fakeCloudflareClient.Received(1)
+            .SetZoneBrotliAsync(Arg.Is("testId"));
     }
 
     [TestMethod]
