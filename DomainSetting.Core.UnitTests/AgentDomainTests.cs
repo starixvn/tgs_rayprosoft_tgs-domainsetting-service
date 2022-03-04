@@ -62,7 +62,7 @@ public class AgentDomainTests
 
         brandIngress.Spec.Rules.Add(CreateIngressRule("test.com"));
 
-        fakeKubernetestClient.GetIngressAsync(Arg.Any<string>())
+        _ = fakeKubernetestClient.GetIngressAsync(Arg.Any<string>())
             .Returns(brandIngress);
 
         await sut.ExecuteAsync(command);

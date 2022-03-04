@@ -38,6 +38,19 @@ internal class CreateDnsZoneInfoCommandService : ICommandService<CreateDnsZoneIn
             await _cloudflareClient
                 .CreateCNameInZoneAsync(zone.Id, $"www.{domain}", _options.TgsDomain)
                 .ConfigureAwait(false);
+
+            await _cloudflareClient
+                .SetZoneAutomaticHttpsRewritesAsync(zone.Id)
+                .ConfigureAwait(false);
+            await _cloudflareClient
+                .SetZoneAlwaysUseHttpsAsync(zone.Id)
+                .ConfigureAwait(false);
+            await _cloudflareClient
+                .SetZoneResultMinifyAsync(zone.Id)
+                .ConfigureAwait(false);
+            await _cloudflareClient
+                .SetZoneBrotliAsync(zone.Id)
+                .ConfigureAwait(false);
         }
     }
 }

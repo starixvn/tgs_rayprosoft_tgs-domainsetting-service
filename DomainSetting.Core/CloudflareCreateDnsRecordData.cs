@@ -2,7 +2,7 @@
 
 namespace Tgs.DomainSettings;
 
-internal class CloudfllareCreateDnsRecordData
+internal class CloudflareCreateDnsRecordData
 {
     public string Type { get; init; } = default!;
 

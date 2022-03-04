@@ -1,4 +1,6 @@
 ﻿using System.Net.Http.Json;
+using System.Net.Mime;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -84,7 +86,7 @@ internal class CloudflareClientService : ICloudflareClientService
 
     public async ValueTask CreateCNameInZoneAsync(string zoneId, string cname, string targetSite)
     {
-        var createInfo = new CloudfllareCreateDnsRecordData
+        var createInfo = new CloudflareCreateDnsRecordData
         {
             Type = "CNAME",
             Name = cname,
@@ -95,6 +97,115 @@ internal class CloudflareClientService : ICloudflareClientService
 
         var response = await _httpClient
             .PostAsJsonAsync($"/client/v4/zones/{zoneId}/dns_records", createInfo, _JsonSerializerOptions)
+            .ConfigureAwait(false);
+
+        var responseData = await response.Content
+            .ReadFromJsonAsync<CloudflareResponse<object>>(_JsonSerializerOptions)
+            .ConfigureAwait(false);
+
+        if (responseData?.Success != true)
+            throw new Exception(string.Join(
+                Environment.NewLine,
+                responseData?.Errors.Select(error => $"{error.Code}: {error.Message}") ?? Array.Empty<string>()));
+    }
+
+    public async ValueTask SetZoneAutomaticHttpsRewritesAsync(string zoneId)
+    {
+        var switchOption = new CloudflareSwitchOptionRequest<string>
+        {
+            Value = "on"
+        };
+
+        var httpRequest = new StringContent(
+            JsonSerializer.Serialize(switchOption, _JsonSerializerOptions),
+            Encoding.UTF8,
+            MediaTypeNames.Application.Json);
+
+        var response = await _httpClient
+            .PatchAsync($"/client/v4/zones/{zoneId}/settings/automatic_https_rewrites", httpRequest)
+            .ConfigureAwait(false);
+
+        var responseData = await response.Content
+            .ReadFromJsonAsync<CloudflareResponse<object>>(_JsonSerializerOptions)
+            .ConfigureAwait(false);
+
+        if (responseData?.Success != true)
+            throw new Exception(string.Join(
+                Environment.NewLine,
+                responseData?.Errors.Select(error => $"{error.Code}: {error.Message}") ?? Array.Empty<string>()));
+    }
+
+    public async ValueTask SetZoneAlwaysUseHttpsAsync(string zoneId)
+    {
+        var switchOption = new CloudflareSwitchOptionRequest<string>
+        {
+            Value = "on"
+        };
+
+        var httpRequest = new StringContent(
+            JsonSerializer.Serialize(switchOption, _JsonSerializerOptions),
+            Encoding.UTF8,
+            MediaTypeNames.Application.Json);
+
+        var response = await _httpClient
+            .PatchAsync($"/client/v4/zones/{zoneId}/settings/always_use_https", httpRequest)
+            .ConfigureAwait(false);
+
+        var responseData = await response.Content
+            .ReadFromJsonAsync<CloudflareResponse<object>>(_JsonSerializerOptions)
+            .ConfigureAwait(false);
+
+        if (responseData?.Success != true)
+            throw new Exception(string.Join(
+                Environment.NewLine,
+                responseData?.Errors.Select(error => $"{error.Code}: {error.Message}") ?? Array.Empty<string>()));
+    }
+
+    public async ValueTask SetZoneResultMinifyAsync(string zoneId)
+    {
+        var switchOption = new CloudflareSwitchOptionRequest<CloudflareMinifyOptionRequest>
+        {
+            Value = new CloudflareMinifyOptionRequest
+            {
+                Html = "on",
+                Css = "on",
+                Js = "on"
+            }
+        };
+
+        var httpRequest = new StringContent(
+            JsonSerializer.Serialize(switchOption, _JsonSerializerOptions),
+            Encoding.UTF8,
+            MediaTypeNames.Application.Json);
+
+        var response = await _httpClient
+            .PatchAsync($"/client/v4/zones/{zoneId}/settings/minify", httpRequest)
+            .ConfigureAwait(false);
+
+        var responseData = await response.Content
+            .ReadFromJsonAsync<CloudflareResponse<object>>(_JsonSerializerOptions)
+            .ConfigureAwait(false);
+
+        if (responseData?.Success != true)
+            throw new Exception(string.Join(
+                Environment.NewLine,
+                responseData?.Errors.Select(error => $"{error.Code}: {error.Message}") ?? Array.Empty<string>()));
+    }
+
+    public async ValueTask SetZoneBrotliAsync(string zoneId)
+    {
+        var switchOption = new CloudflareSwitchOptionRequest<string>
+        {
+            Value = "on"
+        };
+
+        var httpRequest = new StringContent(
+            JsonSerializer.Serialize(switchOption, _JsonSerializerOptions),
+            Encoding.UTF8,
+            MediaTypeNames.Application.Json);
+
+        var response = await _httpClient
+            .PatchAsync($"/client/v4/zones/{zoneId}/settings/brotli", httpRequest)
             .ConfigureAwait(false);
 
         var responseData = await response.Content
