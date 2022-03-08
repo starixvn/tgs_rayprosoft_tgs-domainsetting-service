@@ -75,7 +75,11 @@ internal class ApplyAgentDomainIngressCommandService : ICommandService<ApplyAgen
             ingress.Spec.Rules.Add(new V1IngressRule(
                 domainName,
                 new V1HTTPIngressRuleValue(brandIngress.Spec.Rules[0].Http.Paths)));
+            ingress.Spec.Rules.Add(new V1IngressRule(
+                $"www.{domainName}",
+                new V1HTTPIngressRuleValue(brandIngress.Spec.Rules[0].Http.Paths)));
             ingressTls.Hosts.Add(domainName);
+            ingressTls.Hosts.Add($"www.{domainName}");
         }
 
         var yaml = Yaml.SaveToString(ingress);
