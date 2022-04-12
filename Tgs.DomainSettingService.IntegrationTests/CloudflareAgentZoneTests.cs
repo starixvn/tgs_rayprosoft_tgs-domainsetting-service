@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using OpenTelemetry.Exporter;
 using Tgs.AgentDomainSettings.Repositories.Entities;
 using Tgs.DomainSettings;
 using Tgs.DomainSettings.ApplicationServices;
@@ -23,7 +27,7 @@ public class CloudflareAgentZoneTests
         var fakeCreateService = Substitute.For<ICommandService<CreateDnsZoneInfoCommand>>();
         var fakeCloudflareService = Substitute.For<ICloudflareClientService>();
 
-        await using var web = CreateTestDomainSettingSite(services => services
+        var web = CreateTestDomainSettingSite(services => services
                 .AddSingleton(fakeCreateService)
                 .AddSingleton(fakeCloudflareService));
 
@@ -54,7 +58,7 @@ public class CloudflareAgentZoneTests
         var fakeCreateService = Substitute.For<ICommandService<DeleteDnsZoneInfoCommand>>();
         var fakeCloudflareService = Substitute.For<ICloudflareClientService>();
 
-        await using var web = CreateTestDomainSettingSite(services => services
+        var web = CreateTestDomainSettingSite(services => services
             .AddSingleton(fakeCreateService)
             .AddSingleton(fakeCloudflareService));
 
@@ -83,6 +87,9 @@ public class CloudflareAgentZoneTests
         => new WebApplicationFactory<Program>()
         .WithWebHostBuilder(hostBuilder => hostBuilder
             .ConfigureAppConfiguration((_, configBuilder) => configBuilder.Sources.Clear())
+            .ConfigureLogging((_, logging) => logging
+                .ClearProviders()
+                .AddConsole())
             .ConfigureServices(services =>
             {
                 _ = services
@@ -96,6 +103,12 @@ public class CloudflareAgentZoneTests
 
                         return new TgsContext(dbContextOptionsBuilder.Options);
                     });
+
+                _ = services
+                    .AddSingleton<IConfigureOptions<OtlpExporterOptions>>(
+                        sp => new ConfigureNamedOptions<OtlpExporterOptions>(
+                            Options.DefaultName,
+                            exporterOptions => exporterOptions.Endpoint = null));
 
                 configureServices?.Invoke(services);
             }));

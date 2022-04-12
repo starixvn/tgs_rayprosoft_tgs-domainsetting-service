@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
+using OpenTelemetry.Exporter;
 using Tgs.AgentDomainSettings.Repositories.Entities;
 using Tgs.DomainSettings.ApplicationServices;
 using Tgs.DomainSettings.Clients;
@@ -21,7 +25,7 @@ public class AgentIngressTests
     {
         var fakeApplyService = Substitute.For<ICommandService<ApplyAgentDomainIngressCommand>>();
 
-        await using var web = CreateTestDomainSettingSite(services => services.AddSingleton(fakeApplyService));
+        var web = CreateTestDomainSettingSite(services => services.AddSingleton(fakeApplyService));
 
         var httpClient = web.CreateClient();
 
@@ -49,7 +53,7 @@ public class AgentIngressTests
     {
         var fakeDeleteService = Substitute.For<ICommandService<DeleteAgentDomainIngressCommand>>();
 
-        await using var web = CreateTestDomainSettingSite(services => services.AddSingleton(fakeDeleteService));
+        var web = CreateTestDomainSettingSite(services => services.AddSingleton(fakeDeleteService));
 
         var httpClient = web.CreateClient();
 
@@ -76,6 +80,9 @@ public class AgentIngressTests
         => new WebApplicationFactory<Program>()
             .WithWebHostBuilder(hostBuilder => hostBuilder
                 .ConfigureAppConfiguration((_, configBuilder) => configBuilder.Sources.Clear())
+                .ConfigureLogging((_, logging) => logging
+                    .ClearProviders()
+                    .AddConsole())
                 .ConfigureServices(services =>
                 {
                     _ = services
@@ -89,6 +96,12 @@ public class AgentIngressTests
 
                             return new TgsContext(dbContextOptionsBuilder.Options);
                         });
+
+                    _ = services
+                        .AddSingleton<IConfigureOptions<OtlpExporterOptions>>(
+                            sp => new ConfigureNamedOptions<OtlpExporterOptions>(
+                                Options.DefaultName,
+                                exporterOptions => exporterOptions.Endpoint = null));
 
                     configureServices?.Invoke(services);
                 }));

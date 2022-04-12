@@ -13,7 +13,7 @@ public class YamlTests
     {
         using var templateStream = new MemoryStream(Resources.ingress);
 
-        var sut = await Yaml.LoadFromStreamAsync<V1Ingress>(templateStream);
+        var sut = await KubernetesYaml.LoadFromStreamAsync<V1Ingress>(templateStream);
 
         var agentId = Guid.NewGuid();
         var brandToken = "abcde";
@@ -59,7 +59,8 @@ public class YamlTests
 
         sut.Spec.Rules.Add(ingressRule);
 
-        var actual = Yaml.SaveToString(sut);
+        var serializer = new YamlDotNet.Serialization.Serializer();
+        var actual = serializer.Serialize(sut);
 
         sut.Validate();
     }

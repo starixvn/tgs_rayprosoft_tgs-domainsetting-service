@@ -13,14 +13,23 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="KubernetesClient" Version="7.0.4" />
-		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
-		<PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.0.64">
+		<PackageReference Include="FluentdForward.OpenTelemetry.MessagePack" Version="0.1.2" />
+		<PackageReference Include="KubernetesClient" Version="7.2.10" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.15.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.1.46">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
-		<PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="6.2.3" />
+		<PackageReference Include="Npgsql.OpenTelemetry" Version="6.0.3" />
+		<PackageReference Include="OpenTelemetry.Contrib.Instrumentation.EntityFrameworkCore" Version="1.0.0-beta2" />
+		<PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.2.0-rc4" />
+		<PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.0.0-rc9.1" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.0.0-rc9.1" />
+		<PackageReference Include="OpenTelemetry.Instrumentation.Http" Version="1.0.0-rc9.1" />
+		<PackageReference Include="ProfileViewer.OpenTelemetry.Exporter" Version="0.2.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
+		<PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="6.3.0" />
+		<PackageReference Include="Tgs.WebApi.Toolkits" Version="0.0.13" />
 	</ItemGroup>
 
 	<ItemGroup>
