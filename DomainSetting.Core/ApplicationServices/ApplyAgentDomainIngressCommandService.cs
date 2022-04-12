@@ -55,7 +55,7 @@ internal class ApplyAgentDomainIngressCommandService : ICommandService<ApplyAgen
 
         using var templateStream = new MemoryStream(Resources.ingress);
 
-        var ingress = await Yaml.LoadFromStreamAsync<V1Ingress>(templateStream).ConfigureAwait(false);
+        var ingress = await KubernetesYaml.LoadFromStreamAsync<V1Ingress>(templateStream).ConfigureAwait(false);
 
         ingress.Metadata.Name = $"ing-agent-{agent.BrandCode.ToLower()}-{agent.Name.Trim().ToLower()}";
         ingress.SetAnnotation(
@@ -82,7 +82,6 @@ internal class ApplyAgentDomainIngressCommandService : ICommandService<ApplyAgen
             ingressTls.Hosts.Add($"www.{domainName}");
         }
 
-        var yaml = Yaml.SaveToString(ingress);
         await _kubernetesClientService.ApplyIngressAsync(ingress).ConfigureAwait(false);
     }
 
