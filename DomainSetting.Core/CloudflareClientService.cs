@@ -217,4 +217,25 @@ internal class CloudflareClientService : ICloudflareClientService
                 Environment.NewLine,
                 responseData?.Errors.Select(error => $"{error.Code}: {error.Message}") ?? Array.Empty<string>()));
     }
+
+    public async ValueTask SetFirewallRulesAsync(string zoneId, IEnumerable<CloudflareFirewallRule> rules)
+    {
+        var httpRequest = new StringContent(
+            JsonSerializer.Serialize(rules, _JsonSerializerOptions),
+            Encoding.UTF8,
+            MediaTypeNames.Application.Json);
+
+        var response = await _httpClient
+            .PostAsync($"/client/v4/zones/{zoneId}/firewall/rules", httpRequest)
+            .ConfigureAwait(false);
+
+        var responseData = await response.Content
+            .ReadFromJsonAsync<CloudflareResponse<object>>(_JsonSerializerOptions)
+            .ConfigureAwait(false);
+
+        if (responseData?.Success != true)
+            throw new Exception(string.Join(
+                Environment.NewLine,
+                responseData?.Errors.Select(error => $"{error.Code}: {error.Message}") ?? Array.Empty<string>()));
+    }
 }

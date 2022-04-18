@@ -51,6 +51,19 @@ internal class CreateDnsZoneInfoCommandService : ICommandService<CreateDnsZoneIn
             await _cloudflareClient
                 .SetZoneBrotliAsync(zone.Id)
                 .ConfigureAwait(false);
+
+            await _cloudflareClient
+                .SetFirewallRulesAsync(zone.Id, new[] {
+                    new CloudflareFirewallRule
+                    {
+                        Action = "block",
+                        Description = "Block Taiwan",
+                        Filter = new CloudflareFirewallRuleFilter{
+                            Expression = "(ip.geoip.country in {\"TW\"} and not ip.src in {220.132.206.70})"
+                        }
+                    }
+                })
+                .ConfigureAwait(false);
         }
     }
 }

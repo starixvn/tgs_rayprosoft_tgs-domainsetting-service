@@ -17,4 +17,6 @@ public interface ICloudflareClientService
     ValueTask SetZoneResultMinifyAsync(string zoneId);
 
     ValueTask SetZoneBrotliAsync(string zoneId);
+
+    ValueTask SetFirewallRulesAsync(string zoneId, IEnumerable<CloudflareFirewallRule> rules);
 }
