@@ -11,4 +11,7 @@ internal class CloudflareCreateZoneData
     public CloudflareAccount Accounts { get; init; } = default!;
 
     public string Type { get; init; } = "full";
+
+    [JsonPropertyName("jump_start")]
+    public bool JumpStart { get; init; } = false;
 }
