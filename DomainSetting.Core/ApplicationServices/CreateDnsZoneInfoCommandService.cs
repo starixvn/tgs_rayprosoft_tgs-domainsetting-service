@@ -59,7 +59,7 @@ internal class CreateDnsZoneInfoCommandService : ICommandService<CreateDnsZoneIn
                         Action = "block",
                         Description = "Block Taiwan",
                         Filter = new CloudflareFirewallRuleFilter{
-                            Expression = "(ip.geoip.country in {\"TW\"} and not ip.src in {220.132.206.70})"
+                            Expression = $"(ip.geoip.country in {{\"TW\"}} and not ip.src in {{{_options.OfficeIp}}})"
                         }
                     }
                 })

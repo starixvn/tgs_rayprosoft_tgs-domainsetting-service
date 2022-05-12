@@ -9,4 +9,6 @@ public class CloudflareOptions
     public Uri CloudflareBaseAddress { get; set; } = default!;
 
     public string Token { get; set; } = default!;
+
+    public string OfficeIp { get; set; } = default!;
 }
