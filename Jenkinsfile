@@ -5,7 +5,7 @@ pipeline {
     agent any
     environment {
         BuildConfiguration='Debug'
-        ImageName="harbor.rpgp.cc/tgs/domain-setting"
+        ImageName="pgtgs/domain-setting"
     }
     stages {
         stage('Prepare') {
