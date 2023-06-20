@@ -11,7 +11,7 @@ namespace AgentDomainSetting.Core.UnitTests;
 public class AgentDomainTests
 {
     [TestMethod]
-    public async Task Apply_AgentDomain_Ingress_TestAsync()
+    public async Task Apply_AgentDomain_Ingress_Test()
     {
         var fakeTgsRepository = Substitute.For<ITgsRepository>();
         var fakeBrandCertClient = Substitute.For<IBrandCertificateClient>();
@@ -47,12 +47,8 @@ public class AgentDomainTests
             {
                 var ing = callInfo.Arg<V1Ingress>();
 
-                Assert.IsNotNull(ing.Spec.Tls);
+                Assert.IsNull(ing.Spec.Tls);
                 Assert.IsNotNull(ing.Spec.Rules);
-
-                Assert.AreEqual(1, ing.Spec.Tls.Count);
-                Assert.AreEqual(2, ing.Spec.Tls[0].Hosts.Count);
-                Assert.AreEqual("test.com", ing.Spec.Tls[0].Hosts[0]);
 
                 Assert.AreEqual(2, ing.Spec.Rules.Count);
                 Assert.AreEqual("test.com", ing.Spec.Rules[0].Host);

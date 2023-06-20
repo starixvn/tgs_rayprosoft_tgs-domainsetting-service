@@ -67,7 +67,6 @@ internal class ApplyAgentDomainIngressCommandService : ICommandService<ApplyAgen
 
         var ingressTls = new V1IngressTLS(new List<string>(), $"agent-{agent.BrandCode.ToLower()}-{agent.Name.Trim().ToLower()}");
 
-        ingress.Spec.Tls = new List<V1IngressTLS> { ingressTls };
         ingress.Spec.Rules = new List<V1IngressRule>();
 
         foreach (var domainName in agentDomains)

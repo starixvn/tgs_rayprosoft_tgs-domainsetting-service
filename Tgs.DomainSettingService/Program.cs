@@ -1,18 +1,14 @@
-﻿using k8s;
+﻿using FluentdForward.OpenTelemetry.MessagePack;
+using k8s;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
-using OpenTelemetry.Exporter;
 using OpenTelemetry.Instrumentation.AspNetCore;
+using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Tgs.AgentDomainSettingService;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Configuration
-    .AddJsonFile("/config/appsettings.json", true)
-    .AddEnvironmentVariables();
 
 builder.Logging
     .AddOpenTelemetry(options =>
@@ -24,7 +20,12 @@ builder.Logging
             var nodeIp = builder.Configuration.GetValue<string>("NODE_IP");
             fluentOptions.Host = nodeIp;
             fluentOptions.Tag = builder.Configuration.GetValue<string>("OTEL_SERVICE_NAME");
-            fluentOptions.UseMessagePack();
+            fluentOptions.UseMessagePack(LogRecordFormatterResolver.GetResolverInstanceWithExtendInfo(
+                "MachineInfo",
+                () => new
+                {
+                    Environment.MachineName
+                }));
         });
     });
 
@@ -81,19 +82,6 @@ builder.Services
     });
 
 builder.Services
-    .AddSingleton<IConfigureOptions<OtlpExporterOptions>>(
-        sp => new ConfigureNamedOptions<OtlpExporterOptions>(
-            Microsoft.Extensions.Options.Options.DefaultName,
-            exporterOptions =>
-            {
-                var config = sp.GetRequiredService<IConfiguration>();
-                var nodeIp = config.GetValue<string>("NODE_IP");
-
-                if (!string.IsNullOrWhiteSpace(nodeIp))
-                    exporterOptions.Endpoint = new Uri($"http://{nodeIp}:4317");
-
-                config.GetSection("Opentelemetry:Tracing").Bind(exporterOptions);
-            }))
     .AddOpenTelemetry()
     .WithTracing(
         tracingBuilder => tracingBuilder
@@ -106,6 +94,10 @@ builder.Services
             .AddHttpClientInstrumentation()
             .AddProfileViewExporter()
             .AddOtlpExporter())
+    .WithMetrics(meterProviderBuilder => meterProviderBuilder
+        .AddAspNetCoreInstrumentation()
+        .AddRuntimeInstrumentation()
+        .AddOtlpExporter())
     .Services
     .Configure<AspNetCoreInstrumentationOptions>(
         options => options.Filter = httpContext => !httpContext.Request.Path.HasValue
@@ -119,8 +111,8 @@ builder.Services
 
 var app = builder.Build();
 
-app.MapHealthChecks("/healthz");
 app.MapControllers();
+app.MapHealthChecks("/healthz");
 app.MapSwagger();
 app.MapProfileViewer();
 
