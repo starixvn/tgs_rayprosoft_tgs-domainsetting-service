@@ -1,4 +1,4 @@
-using k8s;
+﻿using k8s;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
@@ -94,7 +94,8 @@ builder.Services
 
                 config.GetSection("Opentelemetry:Tracing").Bind(exporterOptions);
             }))
-    .AddOpenTelemetryTracing(
+    .AddOpenTelemetry()
+    .WithTracing(
         tracingBuilder => tracingBuilder
             .SetResourceBuilder(ResourceBuilder.CreateDefault()
                 .AddEnvironmentVariableDetector())
@@ -105,6 +106,7 @@ builder.Services
             .AddHttpClientInstrumentation()
             .AddProfileViewExporter()
             .AddOtlpExporter())
+    .Services
     .Configure<AspNetCoreInstrumentationOptions>(
         options => options.Filter = httpContext => !httpContext.Request.Path.HasValue
             || !httpContext.Request.Path.StartsWithSegments("/swagger")
