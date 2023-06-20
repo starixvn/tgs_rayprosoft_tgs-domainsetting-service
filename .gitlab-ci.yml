@@ -22,8 +22,6 @@ build-code:
 
 unit-test:
   extends: .unit-test-template
-  script:
-    - dotnet test '**/bin/$BuildConfiguration/net7.0/*Tests.dll' -l:'junit;LogFilePath=TestResults/TestResults.xml'
 
 push-nuget:
   extends: .push-nuget-template
