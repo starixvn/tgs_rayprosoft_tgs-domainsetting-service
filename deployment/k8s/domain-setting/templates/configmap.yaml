@@ -12,3 +12,36 @@ data:
         "TgsDomain": "ac14ad4ad050b4a71b144385e51a20f5-1241810226.ap-east-1.elb.amazonaws.com"
       }
     }
+  otel-collector-config.yaml: |
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+
+    processors:
+      batch:
+
+    exporters:
+      otlp:
+        endpoint: "$NODE_IP:4317"
+        tls:
+          insecure: true
+      prometheus:
+        endpoint: "0.0.0.0:8889"
+        namespace: "tgs"
+
+    extensions:
+      health_check:
+        endpoint: 0.0.0.0:13133
+
+    service:
+      extensions: [health_check]
+      pipelines:
+        traces: 
+          receivers: [otlp]
+          processors:
+            - batch
+          exporters: [otlp]
+        metrics:
+          receivers: [otlp]
+          exporters: [prometheus]
