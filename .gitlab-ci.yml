@@ -36,7 +36,7 @@ push-docker-image:
 push-k8s-template:
   extends: .push-k8s-template
   script:
-    - push_k8s_tempalte $HelmTemplateFolderName $ImageName $Tag
+    - push_k8s_template $HelmTemplateFolderName $ImageName $Tag
 
 deploy-dev:
   extends: .deploy-template
