@@ -38,7 +38,7 @@ public class CloudflareTests
         _ = fakeCloudflareClient.Received(1)
             .CreateZoneAsync(Arg.Is("test.com"));
 
-        _ = fakeCloudflareClient.Received(2)
+        _ = fakeCloudflareClient.Received(3)
             .CreateCNameInZoneAsync(Arg.Is("testId"), Arg.Any<string>(), Arg.Any<string>());
         _ = fakeCloudflareClient.Received(1)
             .SetZoneAutomaticHttpsRewritesAsync(Arg.Is("testId"));

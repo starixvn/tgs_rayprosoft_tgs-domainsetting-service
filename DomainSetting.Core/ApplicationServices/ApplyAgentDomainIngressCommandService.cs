@@ -52,6 +52,9 @@ internal class ApplyAgentDomainIngressCommandService : ICommandService<ApplyAgen
         var brandIngress = await _kubernetesClientService
             .GetIngressAsync($"lobby-{agent.BrandCode.ToLower()}")
             .ConfigureAwait(false);
+        var brandMobileIngress = await _kubernetesClientService
+            .GetIngressAsync($"lobby-{agent.BrandCode.ToLower()}-mobile")
+            .ConfigureAwait(false);
 
         using var templateStream = new MemoryStream(Resources.ingress);
 
@@ -77,9 +80,13 @@ internal class ApplyAgentDomainIngressCommandService : ICommandService<ApplyAgen
                 new V1HTTPIngressRuleValue(brandIngress.Spec.Rules[0].Http.Paths)));
             ingress.Spec.Rules.Add(new V1IngressRule(
                 $"www.{domainName}",
+                new V1HTTPIngressRuleValue(brandMobileIngress.Spec.Rules[0].Http.Paths)));
+            ingress.Spec.Rules.Add(new V1IngressRule(
+                $"m.{domainName}",
                 new V1HTTPIngressRuleValue(brandIngress.Spec.Rules[0].Http.Paths)));
             ingressTls.Hosts.Add(domainName);
             ingressTls.Hosts.Add($"www.{domainName}");
+            ingressTls.Hosts.Add($"m.{domainName}");
         }
 
         await _kubernetesClientService.ApplyIngressAsync(ingress).ConfigureAwait(false);

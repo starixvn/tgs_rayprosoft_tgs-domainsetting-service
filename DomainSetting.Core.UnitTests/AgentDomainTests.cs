@@ -51,12 +51,13 @@ public class AgentDomainTests
                 Assert.IsNotNull(ing.Spec.Rules);
 
                 Assert.AreEqual(1, ing.Spec.Tls.Count);
-                Assert.AreEqual(2, ing.Spec.Tls[0].Hosts.Count);
+                Assert.AreEqual(3, ing.Spec.Tls[0].Hosts.Count);
                 Assert.AreEqual("test.com", ing.Spec.Tls[0].Hosts[0]);
 
-                Assert.AreEqual(2, ing.Spec.Rules.Count);
+                Assert.AreEqual(3, ing.Spec.Rules.Count);
                 Assert.AreEqual("test.com", ing.Spec.Rules[0].Host);
                 Assert.AreEqual("www.test.com", ing.Spec.Rules[1].Host);
+                Assert.AreEqual("m.test.com", ing.Spec.Rules[2].Host);
 
             });
 

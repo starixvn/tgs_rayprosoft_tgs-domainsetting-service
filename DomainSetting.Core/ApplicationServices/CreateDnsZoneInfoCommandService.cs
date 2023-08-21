@@ -38,6 +38,9 @@ internal class CreateDnsZoneInfoCommandService : ICommandService<CreateDnsZoneIn
             await _cloudflareClient
                 .CreateCNameInZoneAsync(zone.Id, $"www.{domain}", _options.TgsDomain)
                 .ConfigureAwait(false);
+            await _cloudflareClient
+                .CreateCNameInZoneAsync(zone.Id, $"m.{domain}", _options.TgsDomain)
+                .ConfigureAwait(false);
 
             await _cloudflareClient
                 .SetZoneAutomaticHttpsRewritesAsync(zone.Id)
