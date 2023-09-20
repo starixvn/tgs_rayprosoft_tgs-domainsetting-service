@@ -9,7 +9,7 @@ data:
         "BrandCertificateBaseUrl": "http://brand-cert-api"
       },
       "Cloudflare": {
-        "TgsDomain": "ac14ad4ad050b4a71b144385e51a20f5-1241810226.ap-east-1.elb.amazonaws.com"
+        "TgsDomain": "entry.srvptt.com"
       }
     }
   otel-collector-config.yaml: |
