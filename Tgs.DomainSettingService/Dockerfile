@@ -16,4 +16,7 @@ RUN dotnet publish "Tgs.DomainSettingService.csproj" -c $BuildConfiguration -o /
 FROM hub.lumigame.com/base/dotnet/core/aspnet:8.0-alpine-24h1.1 AS base
 WORKDIR /app
 COPY --from=builder /app .
+
+ENV ASPNETCORE_URLS=http://+:5000
+
 ENTRYPOINT ["dotnet", "Tgs.DomainSettingService.dll"]
